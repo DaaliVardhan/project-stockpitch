@@ -1,6 +1,6 @@
 const Router = require('express').Router()
 const asyncHandler = require('express-async-handler')
-const { register,login,verifyUser,refresh,verifyEmail } = require("../controllers/authController")
+const { register,login,refresh,verifyEmail,resendOTP } = require("../controllers/authController")
 const updateAuthRouter = require("./updateAuth")
 
 // URL: /api/auth/register
@@ -10,12 +10,17 @@ const updateAuthRouter = require("./updateAuth")
 // Response: success,userId,otpSent,message
 Router.post("/register",asyncHandler(register))
 
-// URL: /api/auth/verifyEmail
+// URL: /api/auth/verifyEmailOTP
 // Method: POST
 // Description: Verify the OTP sent to the user after Register
 // Body: userId,otp
 // Response: success,message
-Router.post("/verifyEmail",asyncHandler(verifyEmail))    
+Router.post("/verifyEmailOTP",asyncHandler(verifyEmail))    
+
+// URL : /api/auth/resendOTP
+// Method : POST
+// Description : Request OTP if registered but not verified
+Router.post('/resendOTP',asyncHandler(resendOTP))
 
 // URL: /api/auth/refresh
 // Method: POST

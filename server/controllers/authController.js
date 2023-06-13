@@ -1,7 +1,7 @@
 const User = require("../models/User")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {sendOTP,verifyOTP } = require("./utils/otp");
+const {sendOTP,verifyOTP} = require("./utils/otp");
 const { getAccessToken,getRefreshToken,setAccessToken,setRefreshToken } = require("./utils/token");
 
 
@@ -10,13 +10,18 @@ async function verifyEmail(req,res){
     const { userId,otp } = req.body;
     if(!userId || !otp) return res.status(400).json({"success":false,error:"Invalid credentials"});
     try{
-        const resp = await verifyOTP(userId,otp);
-        if(!resp){
-            return res.status(400).json({"success":false,error:"Invalid OTP"});
+        const {success,message,error} = await verifyOTP(req,userId,otp);
+        if(error){
+            return res.status(400).json({success,message,error});
         }
-        return res.status(200).json({"success":true,message:"Successfull User Created", userId:userId})
+        const user = await User.findOne({_id:userId});
+        if(!user)
+            return {success:false,message:"User doesn't exists",error:true};
+        user.isEmailVerified = true;
+        await user.save();
+        return res.status(200).json({"success":true,message:"Successfull User Created and Verified, You can login now", userId:userId})
     }catch(error){
-        return res.status(500).json({"success":false,error:err});
+        return res.status(500).json({"success":false,error});
     }
 }
 
@@ -26,7 +31,7 @@ async function verifyUser(req,res){
     const { userId,otp } = req.body;
     if(!userId || !otp) return res.status(400).json({"success":false,error:"Invalid credentials"});
     try{
-        const resp = await verifyOTP(userId,otp);
+        const resp = await verifyOTP(req,userId,otp);
         if(!resp){
             return res.status(400).json({"success":false,error:"Invalid OTP"});
         }
@@ -80,7 +85,7 @@ async function register(req,res){
         }
         const hashedPassword = await bcrypt.hash(password,10);
         const user = await User.create({email,password:hashedPassword,phone});
-        const {message,error} = await sendOTP(user._id,email);
+        const {message,error} = await sendOTP(res,user._id,email);
         if(error){
             return res.status(500).json({"success":false,error:message})
         }
@@ -117,6 +122,30 @@ async function login(req,res){
 
 
 
+async function resendOTP(req,res){
+    const {email,password} = req.body;
+    if(!email || !password) return res.status(400).json({success:false,error:"Invalid credentials"});
+    try {
+        const user = await User.findOne({email});
+        if(!user)
+            return res.status(400).json({success:false,message:"User not found",error:true})
+        if(user.isEmailVerified)
+            return res.status(400).json({success:false,message:"Email already verified, you can login using email and password",error:true})
+        const isPasswordCorrect = bcrypt.compareSync(password,user.password)
+        if(!isPasswordCorrect)
+            return res.status(400).json({success:false,message:"Invalid Credentials",error:true});
+        const {message,error,otpToken} = await sendOTP(res,user._id,email)
+        if(error)
+            return res.status(400).json({success:false,message})
+        return res.status(200).json({message,error,otpToken,userId:user._id})
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({success:false,error})
+    }
+}
+
+
+
 
 module.exports = {
     register,
@@ -124,4 +153,5 @@ module.exports = {
     verifyEmail,
     verifyUser,
     refresh,
+    resendOTP
 }

@@ -1,6 +1,9 @@
 
-const Otp = require("../../models/otp");
+
 const { sendMail } = require('./mailer');
+const jwt = require('jsonwebtoken');
+const User = require('../../models/User');
+require('dotenv').config();
 
 function generateOTP(){
     let otp = ""
@@ -10,49 +13,30 @@ function generateOTP(){
     return otp
 }
 
-async function verifyOTP(userId,otp){
-    if(!userId || !otp) {
-        console.log("Invalid credentials");
-        return false;
-    };
-    try{
-        let otpDoc = await Otp.findOne({userId:userId});
-        if(!otpDoc){
-            return false;
-        }
-        if(otpDoc.otp === otp){
-            await Otp.findOneAndDelete({_id:otpDoc._id})
-            return true;
-        }
-        return false;
-    }
-    catch(err){
-        console.log(err);
-        return false;
-    }
+async function verifyOTP(req,userId,otp){
+    const otpToken  = req.headers.authorization?.split(' ')[1] || null;
+    if(!otpToken) 
+        return {success:false,message:"OTP token not found",error:true};
+    const decode = jwt.verify(otpToken,process.env.OTP_TOKEN_SECRET);
+    if(!decode) 
+        return {success:false,message:"Invalid OTP token",error:true};
+    if(decode.userId !== userId)
+        return {success:false,message:"Invalid UserId",error:true};
+    if(decode.otp !== otp)
+        return {success:false,message:"Invalid OTP",error:true};
+    return {success:false,message:"OTP verified successfully",error:false};
 }
 
-async function sendOTP(userId,email){
-    const otp = generateOTP();    
-    try{
-        const otpDoc = await Otp.findOneAndUpdate({userId},{userId,otp},{
-            new:true,
-            upsert:true
-        })
-        console.log(otpDoc)
 
-        if(!otpDoc)
-            return ["OTP Expired",true]
+async function sendOTP(res,userId,email){
+    const otp = generateOTP();    
         const sent = sendMail({text:`Your otp is ${otp}`,html:`<h1>your otp is ${otp}</h1>`,to:email})
-        if(sent)
-            return {message:"OTP sent to your mail",error:false}
-        else
-            return {message:"Error while sending otp",error:true}
-    }
-    catch (err){
-        console.log("Error while saving otp");
-        return {message:err,error:true}
-    }
+        if(!sent)
+        return {message:"Error while sending otp",error:true}
+        const otpToken = jwt.sign({userId,otp},process.env.OTP_TOKEN_SECRET,{expiresIn:"15m"});
+        res.cookie("otpToken",otpToken,{httpOnly:true,maxAge:15 * 60 * 1000,secure:true})
+        return {message:"OTP sent successfully",error:false,otpToken}
+
 
 }
 

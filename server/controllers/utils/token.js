@@ -29,7 +29,7 @@ function getForgotPasswordToken(obj){
 }
 
 function setForgotPasswordToken(res,obj){
-    const forgotPasswordToken = getAccessToken(obj);
+    const forgotPasswordToken = getForgotPasswordToken(obj);
     res.cookie("updateToken",forgotPasswordToken,{httpOnly:true,maxAge:Number(process.env.FORGOT_PASSWORD_COOKIE_EXPIRY) * 60 * 1000})
     return forgotPasswordToken;
 }

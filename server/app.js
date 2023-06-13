@@ -4,7 +4,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require('express-session');
 const passport = require('passport');
-
+const cors = require('cors');
+require('dotenv').config();
 // Routers
 const authRouter = require("./routes/auth")
 const socialLoginRouter = require("./routes/socialLogin")
@@ -14,6 +15,10 @@ const app = express();
 
 
 // middlewares
+app.use(cors({
+    origin:[process.env.REACT_CLIENT_URL,process.env.SERVER_URL],
+    credentials:true,
+}))
 app.use(session({
     resave:false,
     saveUninitialized:false,
