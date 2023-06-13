@@ -9,19 +9,23 @@ const debug = require('debug')('server:server');
 const http = require('http');
 const mongoose = require('mongoose');
 require('dotenv').config();
+// const fs = require('fs');
+// const key = fs.readFileSync('./key.pem');
+// const cert = fs.readFileSync('./cert.pem');
 
 /**
  * Get port from environment and store in Express.
  */
 
+
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create HTTPS server.
  */
-
-const server = http.createServer(app);
+const server = http.createServer(app)
+// const server = http.createServer({key:key,cert:cert},app);
 
 /**
  * Listen on provided port, on all network interfaces.

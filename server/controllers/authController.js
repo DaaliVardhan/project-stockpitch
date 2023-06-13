@@ -2,9 +2,10 @@ const User = require("../models/User")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {sendOTP,verifyOTP } = require("./utils/otp");
-const { getAccessToken,getRefreshToken,setAccessToken } = require("./utils/token");
+const { getAccessToken,getRefreshToken,setAccessToken,setRefreshToken } = require("./utils/token");
 
 
+// verify otp sent to the email for register
 async function verifyEmail(req,res){
     const { userId,otp } = req.body;
     if(!userId || !otp) return res.status(400).json({"success":false,error:"Invalid credentials"});
@@ -19,6 +20,8 @@ async function verifyEmail(req,res){
     }
 }
 
+
+// verify otp sent to the email for login
 async function verifyUser(req,res){
     const { userId,otp } = req.body;
     if(!userId || !otp) return res.status(400).json({"success":false,error:"Invalid credentials"});
@@ -35,8 +38,7 @@ async function verifyUser(req,res){
             console.log(refreshToken);
             user.refreshToken = refreshToken;
             res.cookie("refreshToken",refreshToken,{httpOnly:true,maxAge:Number(process.env.REFRESH_COOKIE_EXPIRY) * 24 * 60 * 60 * 1000,secure:true})
-            await user.save();
-            
+            await user.save();    
         }
         return res.status(200).json({"success":true,email:user.email,profilePicture:user.profilePicture,accessToken,name:user.name,isEmailVerified:user.isEmailVerified})
         
@@ -45,6 +47,8 @@ async function verifyUser(req,res){
     }
 }
 
+
+// refresh the access token
 async function refresh(req,res){
     const { refreshToken } = req.cookies.token;
     if(!refreshToken) return res.status(400).json({"success":false,error:"Invalid credentials"});
@@ -52,13 +56,15 @@ async function refresh(req,res){
         const user = jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET);
         if(!user)
             return res.status(400).json({"success":false,error:"Invalid Token"});
-        setAccessToken(res,{userId:user._id});
-        return res.status(200).json({"success":true,message:"New access token has been generated"});
+        const accessToken = setAccessToken(res,{userId:user._id});
+        return res.status(200).json({"success":true,message:"New access token has been generated",accessToken});
     } catch (error){
         return res.status(500).json({"success":false,error});
     }
 }
 
+
+// register a new user
 async function register(req,res){
     const { email,password,phone } = req.body;
     if(!email || !password || !phone) return res.status(400).json({"success":false,error:"Invalid credentials"});
@@ -85,20 +91,25 @@ async function register(req,res){
     }
 }
 
+
+// login a user
 async function login(req,res){
     const { email, password} = req.body;
     if(!email || !password) return res.status(400).json({"success":false,error:"Invalid credentials"});
     try{
+
         const user = await User.findOne({email});
         if(!user)
             return res.status(400).json({"success":false,error:"User doesn't Exists"});
         const isPasswordCorrect = await bcrypt.compare(password,user.password);
         if(!isPasswordCorrect)
             return res.status(400).json({"success":false,error:"Invalid credentials"});
-        const {message,error} = await sendOTP(user._id,email);
-        if(error)
-            return res.status(500).json({"success":false,error:message});
-        return res.status(201).json({"success":true,userId:user._id,otpSent:true,message:"OTP sent to your email"})
+        const accessToken = setAccessToken(res,{userId:user._id});
+        const refreshToken = setRefreshToken(res,{userId:user._id});
+        user.refreshToken = refreshToken;
+        await user.save();
+        return res.status(200).json({"success":true,email:user.email,profilePicture:user.profilePicture,accessToken,name:user.name,isEmailVerified:user.isEmailVerified})
+        
     }catch(error){
         return res.status(500).json({"success":false,error});
     }
@@ -112,5 +123,5 @@ module.exports = {
     login,
     verifyEmail,
     verifyUser,
-    refresh
+    refresh,
 }
