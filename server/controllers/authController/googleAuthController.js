@@ -1,6 +1,6 @@
-const User = require("../models/User");
+const User = require("../../models/User");
 require("dotenv").config();
-const { getRefreshToken,setAccessToken } = require("./utils/token");
+const { getRefreshToken,setAccessToken } = require("../utils/token");
 
 
 async function createOrUpdateUser(profile){

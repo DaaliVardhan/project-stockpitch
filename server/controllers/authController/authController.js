@@ -1,8 +1,8 @@
-const User = require("../models/User")
+const User = require("../../models/User")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {sendOTP,verifyOTP} = require("./utils/otp");
-const { getAccessToken,getRefreshToken,setAccessToken,setRefreshToken } = require("./utils/token");
+const {sendOTP,verifyOTP} = require("../utils/otp");
+const { getAccessToken,getRefreshToken,setAccessToken,setRefreshToken } = require("../utils/token");
 
 
 // verify otp sent to the email for register
@@ -113,7 +113,7 @@ async function login(req,res){
         const refreshToken = setRefreshToken(res,{userId:user._id});
         user.refreshToken = refreshToken;
         await user.save();
-        return res.status(200).json({"success":true,email:user.email,profilePicture:user.profilePicture,accessToken,name:user.name,isEmailVerified:user.isEmailVerified})
+        return res.status(200).json({"success":true,userId:user._id,email:user.email,profilePicture:user.profilePicture,accessToken,name:user.name,isEmailVerified:user.isEmailVerified})
         
     }catch(error){
         return res.status(500).json({"success":false,error});
@@ -145,7 +145,14 @@ async function resendOTP(req,res){
 }
 
 
-
+async function getAllUsers(req,res,next){  
+    try {
+        const users = await User.find({}).select("-password");
+        return res.status(200).json({success:true,users});
+    } catch (error) {
+        next(error)
+    }
+}
 
 module.exports = {
     register,
@@ -153,5 +160,6 @@ module.exports = {
     verifyEmail,
     verifyUser,
     refresh,
-    resendOTP
+    resendOTP,
+    getAllUsers
 }

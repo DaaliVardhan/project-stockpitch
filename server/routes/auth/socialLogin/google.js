@@ -3,7 +3,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const passport = require('passport');
 const Router = require("express").Router();
 require('dotenv').config();
-const { createOrUpdateUser,loginSuccessController,loginFailedController,logoutController } = require('../../controllers/googleAuthController');
+const { createOrUpdateUser,loginSuccessController,loginFailedController } = require('../../../controllers/authController');
 
 
 

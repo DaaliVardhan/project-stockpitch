@@ -1,6 +1,6 @@
 const Router = require("express").Router();
 const asyncHandler = require('express-async-handler')
-const { forgotPassword,verifyForgotPassword,updatePassword, } = require("../controllers/updateAuthController")
+const { forgotPassword,verifyForgotPassword,updatePassword, } = require("../../controllers/authController")
 
 // URL : /api/auth/forgot
 // Method : POST

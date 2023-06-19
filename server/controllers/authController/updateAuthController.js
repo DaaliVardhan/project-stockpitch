@@ -1,9 +1,9 @@
 
-const User = require('../models/User');
+const User = require('../../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {sendOTP,verifyOTP } = require("./utils/otp");
-const {  setForgotPasswordToken } = require("../controllers/utils/token");
+const {sendOTP,verifyOTP } = require("../utils/otp");
+const {  setForgotPasswordToken } = require("../utils/token");
 require('dotenv').config();
 
 

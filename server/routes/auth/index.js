@@ -1,6 +1,6 @@
 const Router = require('express').Router()
 const asyncHandler = require('express-async-handler')
-const { register,login,refresh,verifyEmail,resendOTP } = require("../controllers/authController")
+const { register,login,refresh,verifyEmail,resendOTP,getAllUsers } = require("../../controllers/authController")
 const updateAuthRouter = require("./updateAuth")
 
 // URL: /api/auth/register
@@ -60,6 +60,7 @@ Router.post('/logout',asyncHandler((req,res)=>{
     return res.status(200).json({"success":true,message:"Logged out successfully"});
 }))
 
+Router.get("/",asyncHandler(getAllUsers))
 Router.use("/forgot",updateAuthRouter)
 
 

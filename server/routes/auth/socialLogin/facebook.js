@@ -3,7 +3,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 require('dotenv').config();
 const Router = require("express").Router();
 const passport = require('passport');
-const { createOrUpdateUser } = require('../../controllers/facebookAuthController');
+const { createOrUpdateUser } = require('../../../controllers/authController/facebookAuthController');
 
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,

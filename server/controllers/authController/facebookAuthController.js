@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../../models/User');
 
 async function createOrUpdateUser(profile){
     const { id , displayName, email, photos} = profile._json();
