@@ -6,6 +6,7 @@ const session = require('express-session');
 const passport = require('passport');
 const cors = require('cors');
 require('dotenv').config();
+
 // Routers
 const authRouter = require("./routes/auth")
 const socialLoginRouter = require("./routes/auth/socialLogin")
@@ -17,9 +18,10 @@ const app = express();
 
 // middlewares
 app.use(cors({
-    origin:[process.env.REACT_CLIENT_URL,process.env.SERVER_URL],
+    origin:[process.env.REACT_CLIENT_URL,process.env.SERVER_URL,'*'],
     credentials:true,
 }))
+
 app.use(session({
     resave:false,
     saveUninitialized:false,
