@@ -11,10 +11,10 @@ const postExpense = async(req,res,next)=>{
             const startDate = moment(date).startOf('day').toString();
             const endDate = moment(date).endOf('day').toString();
             const expense = await Expense.findOneAndUpdate({userId,date:{ $gte: startDate, $lt: endDate }},{userId,date,income,shoppingExpense,payments,foodExpense,others},{upsert:true,new:true});
-            return res.status(200).json({"success":true,expense});
+            return res.status(200).json({"success":true,userId,expense});
         }
         const expense = await Expense.findOneAndUpdate({userId},{userId,income,shoppingExpense,payments,foodExpense,others},{upsert:true,new:true});
-        return res.status(200).json({"success":true,expense});
+        return res.status(200).json({"success":true,userId,expense});
     }catch(error){
         console.log(error);
         next(error);
@@ -26,26 +26,26 @@ const getExpense = async(req,res,next)=>{
     try {
         if(Object.keys(req.query).length===0){
             const expense = await Expense.find({userId}).sort({date:1});
-            return res.status(200).json({"success":true,expense});
+            return res.status(200).json({"success":true,userId,expense});
         }
         if(req.query.startDate && req.query.endDate){
             let { startDate,endDate } = req.query;
             startDate = moment(startDate).startOf('day').toString();
             endDate = moment(endDate).endOf('day').toString();
             const expense = await Expense.find({userId,date:{$gte:startDate,$lte:endDate}}).sort({date:1});
-            return res.status(200).json({"success":true,expense});
+            return res.status(200).json({"success":true,userId,expense});
         }
         if(req.query.startDate){
             let { startDate } = req.query;
             startDate = moment(startDate).startOf('day').toString();
             const expense = await Expense.find({userId,date:{$gte:startDate}}).sort({date:1});
-            return res.status(200).json({"success":true,expense});
+            return res.status(200).json({"success":true,userId,expense});
         }
         if(req.query.endDate){
             let { endDate } = req.query;
             endDate = moment(endDate).endOf('day').toString();
             const expense = await Expense.find({userId,date:{$lte:endDate}}).sort({date:1});
-            return res.status(200).json({"success":true,expense});
+            return res.status(200).json({"success":true,userId,expense});
         }
     } catch (error) {
         console.log(error);
@@ -61,7 +61,7 @@ const getDayExpense = async(req,res,next)=>{
         const startDate = moment(date).startOf('day').toString();
         const endDate = moment(date).endOf('day').toString()
         const expense = await Expense.findOne({userId,date:{ $gte: startDate, $lt: endDate }});
-        return res.status(200).json({"success":true,expense});
+        return res.status(200).json({"success":true,userId,expense});
     }catch(error){
         console.log(error);
         next(error);  
@@ -76,7 +76,7 @@ const getWeekExpense = async(req,res,next)=>{
         const startDate = moment().startOf('week').toString();
         const endDate = moment().endOf('week').toString();
         const expense = await Expense.find({userId,date:{$gte:startDate,$lte:endDate}});
-        return res.status(200).json({"success":true,expense})
+        return res.status(200).json({"success":true,userId,expense})
     } catch (error) {
         console.log(error);
         next(error)
@@ -90,7 +90,7 @@ const getMonthExpense = async(req,res,next)=>{
         const startDate = moment().startOf('month').toString();
         const endDate = moment().endOf('month').toString();
         const expense = await Expense.find({userId,date:{$gte:startDate,$lte:endDate}});
-        return res.status(200).json({"success":true,expense});
+        return res.status(200).json({"success":true,userId,expense});
     } catch (error) {
         console.log(error);
         next(error);
@@ -103,8 +103,8 @@ const getYearExpense = async(req,res,next)=>{
         const userId = req.user._id;
         const startDate = moment().startOf('year').toString();
         const endDate = moment().endOf('year').toString();
-        const Expense = await Expense.find({userId,date:{$gte:startDate,$lte:endDate}});
-        return res.status(200).json({"success":true,Expense});
+        const expense = await Expense.find({userId,date:{$gte:startDate,$lte:endDate}});
+        return res.status(200).json({"success":true,userId,expense});
     } catch (error) {
         console.log(error);
         next(error);
@@ -117,28 +117,28 @@ const getTotalExpense = async(req,res,next)=>{
     try {
         if(Object.keys(req.query).length===0){
             const expense = await Expense.getExpense({userId});
-            return res.status(200).json({"success":true,expense});
+            return res.status(200).json({"success":true,userId,expense});
         }
         if(req.query.startDate && req.query.endDate){
             let { startDate,endDate } = req.query;
             startDate = moment(startDate).startOf('day').toString();
             endDate = moment(endDate).endOf('day').toString();
             const expense = await Expense.getExpense({userId,startDate,endDate});
-            return res.status(200).json({"success":true,expense});    
+            return res.status(200).json({"success":true,userId,expense});    
         }
         if(req.query.startDate){
             let startDate = req.query.startDate;
             startDate = moment(startDate).startOf('day').toString();
             const expense = await Expense.getExpense({userId,startDate});
-            return res.status(200).json({"success":true,expense})
+            return res.status(200).json({"success":true,userId,expense})
         }
         if(req.query.endDate){
             let endDate = req.query.endDate;
             endDate = moment(endDate).endOf('day').toString();
             const expense = await Expense.getExpense({userId,startDate:null,endDate});
-            return res.status(200).json({"success":true,expense});
+            return res.status(200).json({"success":true,userId,expense});
         }
-        return res.status(202).json({success:true})
+        return res.status(202).json({success:true,userId,expense:[]})
     } catch (error) {
         console.log(error);
         next(error)
@@ -160,7 +160,7 @@ const getTotalYearlyExpense = async(req,res,next)=>{
             expenses.push({expense});
             year = moment(year).add(1,'month');
         }
-        return res.status(200).json({"success":true,expenses});
+        return res.status(200).json({"success":true,userId,expenses});
     } catch (error) {
         console.log(error);
         next(error)
@@ -187,7 +187,7 @@ const getTotalMonthlyExpense = async(req,res,next)=>{
             expenses.push({[moment().month(month).year(year).date(i).format('DD-MM-YYYY')]:expense});
             date = moment(new Date(date.toString())).add(1,'day');
         }
-        return res.status(200).json({"success":true,expenses});
+        return res.status(200).json({"success":true,userId,expenses});
     } catch (error) {
         console.log(error);
         next(error);
