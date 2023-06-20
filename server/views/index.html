@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Documentation</title>
+    <style>
+      *{
+        box-sizing: border-box;
+        margin:0;
+        padding:0;
+      }
+      body {
+        margin-inline: auto;
+        background-color: #f5f5f5;
+        padding: 1rem;
+        text-align: center;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+        font-size: 1rem;
+        font-weight: 400;
+      }
+      table {
+        border: 1px solid #ccc;
+        overflow: auto;
+        border: 1px solid black;
+      }
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <h1 id="stock-pitch">Stock Pitch</h1>
+    <h2 id="authentication-endpoints">Authentication Endpoints</h2>
+    <p>
+      <br />
+      <br />
+    </p>
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>HTTP Methods</th>
+            <th>Endpoints</th>
+            <th>Request Body</th>
+            <th>Request Cookies</th>
+            <th>Response Body</th>
+            <th>Response Cookie</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/auth/register</code></td>
+            <td><code>{email,password,phone}</code></td>
+            <td>NA</td>
+            <td><code>{userId}</code></td>
+            <td><code>otpToken</code></td>
+            <td>
+              Endpoint to create New user and OTP will be sent to email and
+              cookie will be sent to client
+            </td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/auth/verifyEmailOTP</code></td>
+            <td><code>{userId,otp}</code></td>
+            <td><code>otpToken</code> required</td>
+            <td><code>{userId}</code></td>
+            <td>NA</td>
+            <td>Endpoint to verify Email and to successfully create a user</td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/auth/login</code></td>
+            <td><code>{email,password}</code></td>
+            <td>NA</td>
+            <td><code>{email,name,accessToken}</code></td>
+            <td><code>accessToken, refreshToken</code></td>
+            <td>Endpoint to login an existing user</td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/auth/refresh</code></td>
+            <td>NA</td>
+            <td><code>refreshToken</code> required</td>
+            <td><code>{accessToken}</code></td>
+            <td><code>accessToken,refreshToken</code></td>
+            <td>Endpoint to refresh the accessToken using refreshToken</td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/auth/resendOTP</code></td>
+            <td><code>{email,password}</code></td>
+            <td>NA</td>
+            <td><code>{userId}</code></td>
+            <td><code>otpToken</code></td>
+            <td>
+              Endpoint to resent otp to verify email, Same
+              <code>verifyEmailOTP</code> endpoint can be used to verify otp
+            </td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/auth/logout</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>Endpoint to logout user</td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/auth/forgot</code></td>
+            <td><code>{email}</code></td>
+            <td>NA</td>
+            <td><code>{userId}</code></td>
+            <td><code>otpToken</code></td>
+            <td>Endpoint to send request for forgot password</td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/auth/forgot/verify</code></td>
+            <td><code>{userId,otp}</code></td>
+            <td><code>otpToken</code></td>
+            <td><code>{userId}</code></td>
+            <td><code>updateToken</code></td>
+            <td>Endpoint to verify Otp for forgot password request</td>
+          </tr>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/auth/forgot/update</code></td>
+            <td><code>{userId,password}</code></td>
+            <td><code>updateToken</code></td>
+            <td>NA</td>
+            <td>Endpoint to update forgot password request</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/auth/google/</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>Opens the Google consent window</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/auth/google/success</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td><code>{profile}</code></td>
+            <td>NA</td>
+            <td>
+              If the User successfully logins this route contain the user data
+            </td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/auth/google/failed</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td><code>{error}</code></td>
+            <td>NA</td>
+            <td>
+              if the user failed to login this route contain the data of failure
+            </td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/auth/facebook/</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>
+              Opens the facebook consent window
+              <code>but it is not working</code>
+            </td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/auth/facebook/success</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA <code>not working</code></td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/auth/facebook/failed</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA</td>
+            <td>NA <code>not working</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <p>
+        <br />
+        <br />
+      </p>
+      <h2 id="expense-management-endpoints">Expense Management Endpoints</h2>
+      <p>
+        <br />
+        <br />
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>HTTP Methods</th>
+            <th>Endpoints</th>
+            <th>Query Params</th>
+            <th>Request Body</th>
+            <th>Request Cookies</th>
+            <th>Response Body</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>POST</td>
+            <td><code>/api/expense</code></td>
+            <td>NA</td>
+            <td>
+              <code
+                >{date?,income?,shoppingExpense?,payments?,foodExpense?,others?}</code
+              >
+            </td>
+            <td><code>refreshToken,accessToken</code></td>
+            <td><code>expenses</code></td>
+            <td>
+              It will post the data into databases , if date not provided it
+              posts the data on today&#39;s date
+            </td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/expense/</code></td>
+            <td><code>startDate=&#39;&#39;&amp;endDate=&#39;&#39;</code></td>
+            <td>NA</td>
+            <td><code>refreshToken,accessToken</code></td>
+            <td><code>expenses</code></td>
+            <td>
+              If not query provided then it lists all the available expenses, If
+              both provided then it lists all the available expenses between two
+              dates <code>(ISO date format)</code>
+            </td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/expense/day</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td><code>refreshToken,accessToken</code></td>
+            <td><code>expenses</code></td>
+            <td>It provides today&#39;s expenses</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/expense/week</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td><code>refreshToken,accessToken</code></td>
+            <td><code>expenses</code></td>
+            <td>It provides this week&#39;s expenses</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/expense/month</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td><code>refreshToken,accessToken</code></td>
+            <td><code>expenses</code></td>
+            <td>It provides this month&#39;s expenses</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/expense/year</code></td>
+            <td>NA</td>
+            <td>NA</td>
+            <td><code>refreshToken,accessToken</code></td>
+            <td><code>expenses</code></td>
+            <td>It provides this year&#39;s expenses</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/expense/total</code></td>
+            <td><code>startDate=&#39;&#39;&amp;endDate=&#39;&#39;</code></td>
+            <td>NA</td>
+            <td><code>refreshToken,accessToken</code></td>
+            <td><code>expenses</code></td>
+            <td>
+              It provides the total income and expenses between the dates, if
+              not provided It provides the total income and expenses till the
+              date
+            </td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/expense/yearly</code></td>
+            <td><code>year</code></td>
+            <td>NA</td>
+            <td><code>refreshToken,accessToken</code></td>
+            <td>Every month <code>expenses</code></td>
+            <td>It provides total income and expenses month wise</td>
+          </tr>
+          <tr>
+            <td>GET</td>
+            <td><code>/api/expense/monthly</code></td>
+            <td><code>{year,month}</code></td>
+            <td>NA</td>
+            <td><code>refreshToken,accessToken</code></td>
+            <td>Every day <code>expenses</code></td>
+            <td>It provides total income and expenses day wise</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

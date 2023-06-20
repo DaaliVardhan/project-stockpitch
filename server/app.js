@@ -41,6 +41,10 @@ app.use("/auth",socialLoginRouter);
 app.use("/api/auth",authRouter);
 app.use('/api/expense',expenseRouter);
 
+app.get('/',(req,res)=>{
+    return res.status(200).sendFile(path.join(__dirname,'views','index.html'));
+})
+
 
 app.use((req,res)=>{
     return res.status(404).json({"success":false,"error":"Invalid URL"});
