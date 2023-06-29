@@ -18,7 +18,7 @@ const app = express();
 
 // middlewares
 app.use(cors({
-    origin:[process.env.REACT_CLIENT_URL,process.env.SERVER_URL,'*'],
+    // origin:[process.env.REACT_CLIENT_URL,process.env.SERVER_URL,'*'],
     credentials:true,
 }))
 
@@ -54,7 +54,7 @@ app.use((err,req,res,next)=>{
     console.log(err);
     const statusCode = err.statusCode || 500;
     const errorMessage = err.message || "Internal Server Error";
-    return res.status(500).json({"success":false,"error":errorMessage});
+    return res.status(statusCode).json({"success":false,"error":errorMessage});
 })
 passport.serializeUser((user,done)=>{
     done(null,user);
