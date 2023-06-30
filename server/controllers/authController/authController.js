@@ -8,7 +8,7 @@ const { getAccessToken,getRefreshToken,setAccessToken,setRefreshToken } = requir
 // verify otp sent to the email for register
 async function verifyEmail(req,res){
     const { userId,otp } = req.body;
-    if(!userId || !otp) return res.status(400).json({"success":false,error:"Invalid credentials"});
+    if(!userId || !otp) return res.status(400).json({"success":false,error:"userId or otp not provided"});
     try{
         const {success,message,error} = await verifyOTP(req,userId,otp);
         if(error){
@@ -72,7 +72,7 @@ async function refresh(req,res){
 // register a new user
 async function register(req,res){
     const { email,password,phone } = req.body;
-    if(!email || !password || !phone) return res.status(400).json({"success":false,error:"Credentials not provided"});
+    if(!email || !password || !phone) return res.status(400).json({"success":false,error:"emal or password or phone not provided"});
     try{
         const oldUsers = await User.find({$or:[{email},{phone}]})
         let [emailExists,phoneExists] = [false,false];
@@ -100,7 +100,7 @@ async function register(req,res){
 // login a user
 async function login(req,res){
     const { email, password} = req.body;
-    if(!email || !password) return res.status(400).json({"success":false,error:"Credentials not provided"});
+    if(!email || !password) return res.status(400).json({"success":false,error:"email or password not provided"});
     try{
 
         const user = await User.findOne({email});
@@ -124,7 +124,7 @@ async function login(req,res){
 
 async function resendOTP(req,res){
     const {email,password} = req.body;
-    if(!email || !password) return res.status(400).json({success:false,error:"Invalid credentials"});
+    if(!email || !password) return res.status(400).json({success:false,error:"email or password or not provided"});
     try {
         const user = await User.findOne({email});
         if(!user)
