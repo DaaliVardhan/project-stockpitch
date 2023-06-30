@@ -18,9 +18,11 @@ const app = express();
 
 // middlewares
 app.use(cors({
+    origin:"*",
     // origin:[process.env.REACT_CLIENT_URL,process.env.SERVER_URL,'*'],
-    credentials:true,
+    // credentials:true,
 }))
+
 
 app.use(session({
     resave:false,

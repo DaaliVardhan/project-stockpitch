@@ -72,7 +72,7 @@ async function refresh(req,res){
 // register a new user
 async function register(req,res){
     const { email,password,phone } = req.body;
-    if(!email || !password || !phone) return res.status(400).json({"success":false,error:"Invalid credentials"});
+    if(!email || !password || !phone) return res.status(400).json({"success":false,error:"Credentials not provided"});
     try{
         const oldUsers = await User.find({$or:[{email},{phone}]})
         let [emailExists,phoneExists] = [false,false];
@@ -85,11 +85,11 @@ async function register(req,res){
         }
         const hashedPassword = await bcrypt.hash(password,10);
         const user = await User.create({email,password:hashedPassword,phone});
-        const {message,error} = await sendOTP(res,user._id,email);
+        const {message,error,otpToken} = await sendOTP(res,user._id,email);
         if(error){
             return res.status(500).json({"success":false,error:message})
         }
-        return res.status(200).json({"success":true,userId:user._id,otpSent:true,message:message})
+        return res.status(200).json({"success":true,userId:user._id,otpSent:true,message:message,otpToken})
     }catch(err){
         console.log(err)
         return res.status(500).json({"success":false,error:err});
@@ -100,7 +100,7 @@ async function register(req,res){
 // login a user
 async function login(req,res){
     const { email, password} = req.body;
-    if(!email || !password) return res.status(400).json({"success":false,error:"Invalid credentials"});
+    if(!email || !password) return res.status(400).json({"success":false,error:"Credentials not provided"});
     try{
 
         const user = await User.findOne({email});
@@ -108,7 +108,7 @@ async function login(req,res){
             return res.status(400).json({"success":false,error:"User doesn't Exists"});
         const isPasswordCorrect = await bcrypt.compare(password,user.password);
         if(!isPasswordCorrect)
-            return res.status(400).json({"success":false,error:"Invalid credentials"});
+            return res.status(400).json({"success":false,error:"Incorrect password"});
         const accessToken = setAccessToken(res,{userId:user._id});
         const refreshToken = setRefreshToken(res,{userId:user._id});
         user.refreshToken = refreshToken;
