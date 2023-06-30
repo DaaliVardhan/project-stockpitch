@@ -24,7 +24,7 @@ const postExpense = async(req,res,next)=>{
 const getExpense = async(req,res,next)=>{
     const userId = req.user._id;
     try {
-        if(Object.keys(req.query).length===0){
+        if(Object.keys(req.query).length<=1){
             const expense = await Expense.find({userId}).sort({date:1});
             return res.status(200).json({"success":true,userId,expense});
         }
@@ -46,6 +46,9 @@ const getExpense = async(req,res,next)=>{
             endDate = moment(endDate).endOf('day').toString();
             const expense = await Expense.find({userId,date:{$lte:endDate}}).sort({date:1});
             return res.status(200).json({"success":true,userId,expense});
+        }
+        else{
+            return res.status(404).json({"success":false,userId,expense:[]})
         }
     } catch (error) {
         console.log(error);

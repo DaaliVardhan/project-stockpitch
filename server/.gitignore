@@ -5,3 +5,5 @@ key.pem
 keytmp.pem
 config/
 client/
+client/index.html
+../client/

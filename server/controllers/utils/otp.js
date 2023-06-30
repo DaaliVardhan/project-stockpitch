@@ -34,7 +34,7 @@ async function sendOTP(res,userId,email){
         if(!sent)
         return {message:"Error while sending otp",error:true}
         const otpToken = jwt.sign({userId,otp},process.env.OTP_TOKEN_SECRET,{expiresIn:"15m"});
-        res.cookie("otpToken",otpToken,{httpOnly:true,maxAge:15 * 60 * 1000,secure:true})
+        res.cookie("otpToken",otpToken,{maxAge:15 * 60 * 1000})
         return {message:"OTP sent successfully",error:false,otpToken}
 
 

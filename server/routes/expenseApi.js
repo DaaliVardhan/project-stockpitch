@@ -7,7 +7,7 @@ const { postExpense, getExpense, getDayExpense, getWeekExpense, getMonthExpense,
 
 
 async function getUserName(req,res,next){
-    const userId = req.body?.userId || "6488809ebbeaba9e7c7c1a58";
+    const userId = req.query?.userId ||"6488809ebbeaba9e7c7c1a58";
     try {
         const user = await User.findOne({_id:userId}).select('-password');
         req.user = user;
@@ -18,7 +18,17 @@ async function getUserName(req,res,next){
 }
 
 
+
+async function isVerifed(req,res,next){
+    const user = req.user;
+    if(!user.isEmailVerified){
+        return res.status(403).json({success:'false',message:'Email is not verified'})
+    }
+    next();
+}
+
 Router.use(getUserName);
+Router.use(isVerifed);
 // Router.use(verifyToken)
 
 // URL : /api/expense
