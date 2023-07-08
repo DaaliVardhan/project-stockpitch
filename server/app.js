@@ -11,6 +11,7 @@ require('dotenv').config();
 const authRouter = require("./routes/auth")
 const socialLoginRouter = require("./routes/auth/socialLogin")
 const expenseRouter = require("./routes/expenseApi")
+const investmentTrackerRouter = require("./routes/trackerApi")
 
 // app
 const app = express();
@@ -42,6 +43,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/auth",socialLoginRouter);
 app.use("/api/auth",authRouter);
 app.use('/api/expense',expenseRouter);
+app.use("/api/tracker",investmentTrackerRouter);
+
 
 app.get('/',(req,res)=>{
     return res.status(200).sendFile(path.join(__dirname,'views','index.html'));
@@ -53,8 +56,7 @@ app.use((req,res)=>{
 })
 
 app.use((err,req,res,next)=>{
-    console.log(err);
-    const statusCode = err.statusCode || 500;
+    const statusCode = res.statusCode || 500;
     const errorMessage = err.message || "Internal Server Error";
     return res.status(statusCode).json({"success":false,"error":errorMessage});
 })
