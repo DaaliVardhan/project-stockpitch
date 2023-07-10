@@ -6,7 +6,6 @@ async function verifyToken(req,res,next){
     const accessToken = req.headers.authorization.split(' ')[1];
     if(!accessToken || !refreshToken) return res.status(401).json({"success":false,error:"Unauthorized"});
     try{
-
         const accessTokenUserId = jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET);
         const refreshTokenUserId = jwt.verify(accessToken,process.env.ACCESS_TOKEN_SECRET);
         if(accessTokenUserId.userId !== refreshTokenUserId.userId) return res.status(401).json({"success":false,error:"Unauthorized"});
@@ -21,7 +20,6 @@ async function verifyToken(req,res,next){
         return res.status(500).json({"success":false,error});
     }
 }
-
 module.exports = {
     verifyToken
 }
