@@ -797,7 +797,7 @@ The only endpoint to post expense of a user. All the fields are optional, If the
 }
 ```
 
-## `POST` add / Update savings of a user
+### `POST` add / Update savings of a user
 
 **URL**
 ```
@@ -1137,7 +1137,7 @@ const url = "http://localhost:3000/api/tracker/stocks"
 ```javascript
   const url = "http://localhost:3000/api/tracker/gold"
   const options = {
-    mehtod:"GET"
+    method:"GET"
   }
 
   fetch(url,options)
@@ -1178,7 +1178,7 @@ const url = "http://localhost:3000/api/tracker/stocks"
   "valueAtTheTimeOfInvestment":900
 }
   const options = {
-    mehtod:"POST"
+    method:"POST"
     body:JSON.strigify(body)
   }
 
@@ -1216,7 +1216,7 @@ const url = "http://localhost:3000/api/tracker/stocks"
 ```javascript
   const url = "http://localhost:3000/api/tracker/gold"
   const options = {
-    mehtod:"DELETE"
+    method:"DELETE"
   }
 
   fetch(url,options)
@@ -1244,7 +1244,7 @@ const url = "http://localhost:3000/api/tracker/stocks"
 ```javascript
   const url = "http://localhost:3000/api/tracker/ppf"
   const options = {
-    mehtod:"GET"
+    method:"GET"
   }
 
   fetch(url,options)
@@ -1316,7 +1316,7 @@ const url = "http://localhost:3000/api/tracker/stocks"
 ```javascript
   const url = "http://localhost:3000/api/tracker/ppf"
   const options = {
-    mehtod:"DELETE"
+    method:"DELETE"
   }
 
   fetch(url,options)
@@ -1344,7 +1344,7 @@ const url = "http://localhost:3000/api/tracker/stocks"
 ```javascript
   const url = "http://localhost:3000/api/tracker/commodity"
   const options = {
-    mehtod:"GET"
+    method:"GET"
   }
 
   fetch(url,options)
@@ -1388,7 +1388,7 @@ const url = "http://localhost:3000/api/tracker/stocks"
     "currentValue":2000
   }
   const options = {
-    mehtod:"POST"
+    method:"POST"
     body: JSON.strigify(body)
   }
 
@@ -1428,7 +1428,7 @@ const url = "http://localhost:3000/api/tracker/stocks"
     "commodityName":"Demo",
   }
   const options = {
-    mehtod:"DELETE"
+    method:"DELETE"
     body: JSON.strigify(body)
   }
 
