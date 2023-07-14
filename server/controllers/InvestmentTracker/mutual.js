@@ -38,7 +38,39 @@ const addMutualFunds = async (req,res,next)=>{
 }
 
 
+const deleteMutualFund = async (req,res,next)=>{
+    try {
+        const user = req.user;
+        const {mutualFundName,mutualFundId} = req.body;
+        if(!mutualFundName && !mutualFundId){
+            res.status(400);
+            throw new Error("Invalid request. mutualFundName or mutualFundId is required");
+        }
+        if(mutualFundName){
+            const commodity = await MutualFund.findOne({userId:user._id,mutualFundName});
+            if(!commodity){
+                res.status(404);
+                throw new Error("Commodity tracker not found");
+            }
+            await MutualFund.findOneAndRemove({userId:user._id,mutualFundName});
+            return res.status(200).json({success:true,data:{}});
+        }
+        if(mutualFundId){
+            const commodity = await MutualFund.findOne({userId:user._id,_id:mutualFundId});
+            if(!commodity){
+                res.status(404);
+                throw new Error("Commodity tracker not found");
+            }
+            await MutualFund.findOneAndRemove({userId:user._id,_id:mutualFundId});
+            return res.status(200).json({success:true,data:{}});
+        }
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     getMutualFunds,
     addMutualFunds,
+    deleteMutualFund
 }

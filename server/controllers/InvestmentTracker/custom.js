@@ -39,8 +39,41 @@ const addCustomTracker = async (req,res,next)=>{
     }
 }
 
+const deleteCustomTracker = async (req,res,next)=>{
+    try {
+        const user= req.user;
+        const {trackerName,trackerId} = req.body;
+        if(!trackerName && !trackerId){
+            res.status(400);
+            throw new Error("Invalid request. trackerName or trackerId is required");
+        }
+        if(trackerName){
+            const customTracker = await CustomTracker.findOne({userId:user._id,trackerName});
+            if(!customTracker){
+                res.status(404);
+                throw new Error("Custom tracker not found");
+            }
+            await CustomTracker.findOneAndRemove({userId:user._id,trackerName});
+            return res.status(200).json({success:true,data:{}});
+        }
+        if(trackerId){
+            const customTracker = await CustomTracker.findOne({userId:user._id,_id:trackerId});
+            if(!customTracker){
+                res.status(404);
+                throw new Error("Custom tracker not found");
+            }
+            await CustomTracker.findOneAndRemove({userId:user._id,_id:trackerId});
+            return res.status(200).json({success:true,data:{}});
+        }
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 
 module.exports = {
     getCustomTracker,
     addCustomTracker,
+    deleteCustomTracker
 }

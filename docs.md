@@ -755,3 +755,915 @@ The only endpoint to post expense of a user. All the fields are optional, If the
   ]
 }
 ```
+
+
+
+## Investment Tracker API Endpoints
+
+### `GET` to get the savings of a user
+
+**URL**
+```
+  http://localhost:3000/api/tracker/savings
+```
+
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/savings"
+  const options = {
+    method:"GET",
+  }
+  fetch(url,options)
+    .then((res)=>res.json())
+    .then((data)=>console.log(data))
+    .catch(err=>console.log(err))
+
+```
+
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "64ac3bb630714c6b629d1f7d",
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "currentSavings": 10,
+    "createdAt": "2023-07-10T17:11:18.470Z",
+    "updatedAt": "2023-07-10T17:11:18.470Z",
+    "__v": 0
+  }
+}
+```
+
+## `POST` add / Update savings of a user
+
+**URL**
+```
+  http://localhost:3000/api/tracker/savings
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/savings"
+  const body  = {
+    addSavings = 10 // -10 for decreasing the savings
+  }
+  const options = {
+    method:"POST",
+    body:JSON.stringify(body)
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.log(err))
+
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "64ac3bb630714c6b629d1f7d",
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "currentSavings": 20,
+    "createdAt": "2023-07-10T17:11:18.470Z",
+    "updatedAt": "2023-07-11T08:08:31.508Z",
+    "__v": 0
+  }
+}
+
+```
+
+### `DELETE` the savings
+
+**URL**
+```
+  http://localhost:3000/api/tracker/savings
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/savings"
+  // const body = {
+  //   userId : 123123123123123
+  // }
+  const options = {
+    method:"DELETE",
+    // body:JSON.stringify(body)
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.log(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {}
+}
+```
+
+
+### `GET` request to get all the bond types available
+
+**URL**
+```
+  http://localhost:3000/api/tracker/bond-types
+```
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/bond-types";
+  const options = {
+    method:"GET"
+  }
+
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": [
+    "Government",
+    "Corporate"
+  ]
+}
+```
+
+### `GET` request to get all the saved bonds
+
+**URL**
+```
+  http://localhost:3000/api/traker/bonds
+```
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/bonds"
+  const options = {
+    method:"GET",
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.log(err))
+```
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "64b1848c41f68a72e9c927aa",
+      "userId": "6488809ebbeaba9e7c7c1a58",
+      "bondName": "Sovergin bond",
+      "amountInvested": 10000,
+      "bondType": "Government",
+      "createdAt": "2023-07-14T17:23:24.650Z",
+      "updatedAt": "2023-07-14T17:23:24.650Z",
+      "__v": 0
+    }
+  ]
+}
+```
+
+### `POST` request to add new bonds
+
+**URL**
+```
+  http://localhost:3000/api/tracker/bonds
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/bonds"
+  const body = {
+  "bondName":"Sovergin bond",
+  "amountInvested":10000,
+  "bondType":"Government"
+}
+  const options = {
+    method:"POST",
+    body : JSON.stringify(body)
+  }
+
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "bondName": "Sovergin bond",
+    "amountInvested": 10000,
+    "bondType": "Government",
+    "_id": "64b1848c41f68a72e9c927aa",
+    "createdAt": "2023-07-14T17:23:24.650Z",
+    "updatedAt": "2023-07-14T17:23:24.650Z",
+    "__v": 0
+  }
+}
+```
+
+
+### `DELETE` to remove old bonds from the database.
+
+**URL**
+```
+  http://localhost:3000/api/tracker/bonds
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/bonds"
+  const body = {
+    "bondId": "6488809ebbeaba9e7c7c1a58" 
+    // or bondName : "Soverign bond"
+  }
+  const options ={
+    method:"DELETE",
+    body : JSON.stringify(body);
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {}
+}
+```
+
+
+### `GET` request to get all stocks
+
+**URL**
+```
+  http://localhost:3000/api/tracker/stocks
+```
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/stocks"
+  const options = {
+    method:"GET",
+  }
+  fetch(url,option)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "64b1889f41f68a72e9c927b4",
+      "userId": "6488809ebbeaba9e7c7c1a58",
+      "stockName": "Demo",
+      "buyAveragePrice": 1000,
+      "investedValue": 1000,
+      "createdAt": "2023-07-14T17:40:47.491Z",
+      "updatedAt": "2023-07-14T17:40:47.491Z",
+      "__v": 0
+    }
+  ]
+}
+```
+
+
+### `POST` request to add new stocks
+
+**URL**
+```
+  http://localhost:3000/api/tracker/stocks
+```
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/stocks"
+  const body = {
+  "stockName":"Demo",
+  "buyAveragePrice":1000,
+  "investedValue":1000
+  }
+  const options = {
+    method:"POST",
+    body = JSON.stringify(body)
+  }
+  fetch(url,option)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "stockName": "Demo",
+    "buyAveragePrice": 1000,
+    "investedValue": 1000,
+    "_id": "64b1889f41f68a72e9c927b4",
+    "createdAt": "2023-07-14T17:40:47.491Z",
+    "updatedAt": "2023-07-14T17:40:47.491Z",
+    "__v": 0
+  }
+}
+```
+
+
+### `Delete` request to delete a stock
+
+**URL**
+```
+  http://localhost:3000/api/tracker/stocks
+```
+**Request**
+```javascript
+const url = "http://localhost:3000/api/tracker/stocks"
+  const body = {
+    "stockName": "Demo"
+  }
+  const options = {
+    method:"DELETE",
+    body = JSON.stringify(body)
+  }
+  fetch(url,option)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {}
+}
+```
+
+
+### `GET` request to get all records of gold
+
+**URL**
+```
+  http://localhost:3000/api/tracker/gold
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/gold"
+  const options = {
+    mehtod:"GET"
+  }
+
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "64ac42fb8dd2138194db0b6c",
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "investedAmount": 2000,
+    "valueAtTheTimeOfInvestment": 900,
+    "createdAt": "2023-07-10T17:42:19.909Z",
+    "updatedAt": "2023-07-10T17:42:19.909Z",
+    "__v": 0
+  }
+}
+```
+
+
+### `POST` request to get all records of gold
+
+**URL**
+```
+  http://localhost:3000/api/tracker/gold
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/gold"
+  const body = {
+  "investedAmount":2000,
+  "valueAtTheTimeOfInvestment":900
+}
+  const options = {
+    mehtod:"POST"
+    body:JSON.strigify(body)
+  }
+
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "64ac42fb8dd2138194db0b6c",
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "investedAmount": 2000,
+    "valueAtTheTimeOfInvestment": 900,
+    "createdAt": "2023-07-10T17:42:19.909Z",
+    "updatedAt": "2023-07-10T17:42:19.909Z",
+    "__v": 0
+  }
+}
+```
+
+### `DELETE` request to get all records of gold
+
+**URL**
+```
+  http://localhost:3000/api/tracker/gold
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/gold"
+  const options = {
+    mehtod:"DELETE"
+  }
+
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {}
+}
+```
+
+### `GET` request to get Provident fund
+
+**URL**
+```
+  http://localhost:3000/api/tracker/ppf
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/ppf"
+  const options = {
+    mehtod:"GET"
+  }
+
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "64ac440b8217cd8d63933bb1",
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "investedAmount": 1002,
+    "createdAt": "2023-07-10T17:46:51.188Z",
+    "updatedAt": "2023-07-10T17:46:51.188Z",
+    "__v": 0
+  }
+}
+```
+
+### `POST` request to add ppf
+
+**URL**
+```
+  http://localhost:3000/api/tracker/ppf
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/ppf"
+  const body = {
+  "investedAmount":1002
+  }
+  const options = {
+    method:"POST",
+    body:JSON.strigify(body)
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "64ac440b8217cd8d63933bb1",
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "investedAmount": 1002,
+    "createdAt": "2023-07-10T17:46:51.188Z",
+    "updatedAt": "2023-07-10T17:46:51.188Z",
+    "__v": 0
+  }
+}
+```
+### `DELETE` request to add ppf
+
+**URL**
+```
+  http://localhost:3000/api/tracker/ppf
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/ppf"
+  const options = {
+    mehtod:"DELETE"
+  }
+
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {}
+}
+```
+
+### `GET` request to get all records of Commodity
+
+**URL**
+```
+  http://localhost:3000/api/tracker/commodity
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/commodity"
+  const options = {
+    mehtod:"GET"
+  }
+
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "64ac4544a4c748936ea09d7e",
+      "userId": "6488809ebbeaba9e7c7c1a58",
+      "commodityName": "Demo",
+      "investedAmount": 1000,
+      "currentValue": 2000,
+      "createdAt": "2023-07-10T17:52:04.577Z",
+      "updatedAt": "2023-07-10T17:52:04.577Z",
+      "__v": 0
+    }
+  ]
+}
+```
+
+### `POST` request to add record of commodity
+
+**URL**
+```
+  http://localhost:3000/api/tracker/commodity
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/commodity"
+  const body = {
+    "commodityName":"Demo",
+    "investedAmount":1000,
+    "currentValue":2000
+  }
+  const options = {
+    mehtod:"POST"
+    body: JSON.strigify(body)
+  }
+
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "64ac4544a4c748936ea09d7e",
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "commodityName": "Demo",
+    "investedAmount": 1000,
+    "currentValue": 2000,
+    "createdAt": "2023-07-10T17:52:04.577Z",
+    "updatedAt": "2023-07-10T17:52:04.577Z",
+    "__v": 0
+  }
+}
+```
+### `DELETE` request to delete record of commodity
+
+**URL**
+```
+  http://localhost:3000/api/tracker/commodity
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/commodity"
+  const body = {
+    "commodityName":"Demo",
+  }
+  const options = {
+    mehtod:"DELETE"
+    body: JSON.strigify(body)
+  }
+
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    .catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {}
+}
+```
+
+### `GET` request for all available mutual funds
+
+**URL**
+```
+  http://localhost:3000/api/tracker/mutual-funds
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/mutual-funds"
+  const options = {
+    method:"GET",
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "64b18f7592755bb58a2dc47a",
+      "userId": "6488809ebbeaba9e7c7c1a58",
+      "mutualFundName": "Demo",
+      "investedAmount": 1000,
+      "currentValue": 1200,
+      "createdAt": "2023-07-14T18:09:57.415Z",
+      "updatedAt": "2023-07-14T18:09:57.415Z",
+      "__v": 0
+    }
+  ]
+}
+```
+### `POST` request for add a mutual fund
+
+**URL**
+```
+  http://localhost:3000/api/tracker/mutual-funds
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/mutual-funds"
+  const body ={
+      "mutualFundName":"Demo",
+      "investedAmount":1000,
+      "currentValue":1200
+  }
+  const options = {
+    method:"POST",
+    body = JSON.strigify(body)
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "mutualFundName": "Demo",
+    "investedAmount": 1000,
+    "currentValue": 1200,
+    "_id": "64b18f7592755bb58a2dc47a",
+    "createdAt": "2023-07-14T18:09:57.415Z",
+    "updatedAt": "2023-07-14T18:09:57.415Z",
+    "__v": 0
+  }
+}
+```
+### `DELETE` request for a mutual fund
+
+**URL**
+```
+  http://localhost:3000/api/tracker/mutual-funds
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/mutual-funds"
+  const body ={
+    "mutualFundName":"Demo"
+  }
+  const options = {
+    method:"DELETE",
+
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {}
+}
+```
+### `GET` request for all available custom trackers 
+
+**URL**
+```
+  http://localhost:3000/api/tracker/custom-tracker
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/custom-tracker"
+  
+  const options = {
+    method:"GET",
+
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "64b191a592755bb58a2dc487",
+      "userId": "6488809ebbeaba9e7c7c1a58",
+      "trackerName": "Demo",
+      "investedAmount": 1000,
+      "valueAtTheTimeOfInvestment": 900,
+      "currentValue": 1200,
+      "createdAt": "2023-07-14T18:19:17.349Z",
+      "updatedAt": "2023-07-14T18:19:17.349Z",
+      "__v": 0
+    }
+  ]
+}
+```
+### `POST` request for add or update a custom tracker
+
+**URL**
+```
+  http://localhost:3000/api/tracker/custom-tracker
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/custom-tracker"
+  const body = {
+    "trackerName" : "Demo",
+    "investedAmount":1000,
+    "valueAtTheTimeOfInvestment":900,
+    "currentValue":1200
+  }
+  const options = {
+    method:"POST",
+    body : JSON.stringify(body)
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {
+    "userId": "6488809ebbeaba9e7c7c1a58",
+    "trackerName": "Demo",
+    "investedAmount": 1000,
+    "valueAtTheTimeOfInvestment": 900,
+    "currentValue": 1200,
+    "_id": "64b191a592755bb58a2dc487",
+    "createdAt": "2023-07-14T18:19:17.349Z",
+    "updatedAt": "2023-07-14T18:19:17.349Z",
+    "__v": 0
+  }
+}
+```
+### `DELETE` request for delete a custom tracker
+
+**URL**
+```
+  http://localhost:3000/api/tracker/custom-tracker
+```
+
+**Request**
+```javascript
+  const url = "http://localhost:3000/api/tracker/custom-tracker"
+  const body = {
+    "trackerName":"Demo" 
+  }
+  const options = {
+    method:"GET",
+    body : JSON.stringify(body)
+  }
+  fetch(url,options)
+    .then(res=>res.json())
+    .then(data=>console.log(data))
+    catch(err=>console.error(err))
+```
+
+**Response**
+```json
+{
+  "success": true,
+  "data": {}
+}
+```

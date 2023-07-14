@@ -7,8 +7,8 @@ const {
     getGold, addGold,deleteGold,
     getPpf, addPpf,deletePpf,
     getCommodity, addCommodity,deleteCommodity,
-    getMutualFunds, addMutualFunds,
-    getCustomTracker,addCustomTracker,
+    getMutualFunds, addMutualFunds,deleteMutualFund,
+    getCustomTracker,addCustomTracker,deleteCustomTracker
 } = require('../controllers/InvestmentTracker')
 
 
@@ -170,6 +170,12 @@ router.get('/mutual-funds',getMutualFunds)
 
 router.post('/mutual-funds',addMutualFunds)
 
+// URL : /api/tracker/mutual-funds
+// Method : DELETE
+// Description : Delete mutual funds
+
+router.delete('/mutual-funds',deleteMutualFund)
+
 
 // URL : /api/tracker/custom-tracker
 // Method : GET
@@ -183,6 +189,10 @@ router.get('/custom-tracker',getCustomTracker)
 
 router.post('/custom-tracker',addCustomTracker)
 
+// URL : /api/tracker/custom-tracker
+// Method : DELETE
+// Description : Delete custom tracker
 
+router.delete('/custom-tracker',deleteCustomTracker)
 
 module.exports = router;
